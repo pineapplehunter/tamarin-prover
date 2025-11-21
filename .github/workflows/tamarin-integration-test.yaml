@@ -88,6 +88,13 @@ jobs:
         working-directory: tree-sitter/tree-sitter-spthy
         run: tree-sitter generate
 
+      - name: Unit test for tree-sitter-spthy
+        working-directory: tree-sitter/tree-sitter-spthy
+        run: |
+          mkdir -p ~/.config/tree-sitter
+          echo '{"parser-directories":[".."]}' > ~/.config/tree-sitter/config.json
+          tree-sitter test
+
       - name: Regression tests for tree-sitter-spthy
         working-directory: tree-sitter/tree-sitter-spthy
         run: ./regressionParser.sh
