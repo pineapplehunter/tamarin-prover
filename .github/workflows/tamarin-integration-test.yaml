@@ -30,6 +30,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-stack
 
+      - name: Unit test for tree-sitter-spthy (remove later)
+        working-directory: tree-sitter/tree-sitter-spthy
+        run: |
+          tree-sitter init-config
+          tree-sitter test
+          # echo '{"parser-directories":[".."]}' > ~/.config/tree-sitter/config.json
+
       - name: Pre-install
         run: |
           mkdir -p ~/.local/bin
