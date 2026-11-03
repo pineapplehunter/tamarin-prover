@@ -1,0 +1,40 @@
+name: Tree-sitter grammar
+
+on:
+  push:
+    paths:
+      - 'tree-sitter/**'
+      - 'examples/**'
+      - 'lib/theory/src/Theory/Text/Parser/**'
+      - '.github/workflows/tree-sitter.yml'
+  pull_request:
+    paths:
+      - 'tree-sitter/**'
+      - 'examples/**'
+      - 'lib/theory/src/Theory/Text/Parser/**'
+      - '.github/workflows/tree-sitter.yml'
+
+jobs:
+  grammar:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tree-sitter/tree-sitter-spthy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: npm
+          cache-dependency-path: tree-sitter/tree-sitter-spthy/package-lock.json
+      - run: npm ci
+      - name: Check generated sources
+        run: |
+          npm run generate
+          git diff --exit-code -- src
+      - name: Rebuild binding and test grammar, highlights, queries, and edits
+        run: |
+          npm rebuild --build-from-source
+          npm test
+      - name: Parse repository examples
+        run: npm run test:examples
