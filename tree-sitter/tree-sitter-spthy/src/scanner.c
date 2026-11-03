@@ -21,7 +21,7 @@ bool tree_sitter_spthy_external_scanner_scan(void *payload, TSLexer *lexer, cons
 
     if (lexer->lookahead == '/') {
         lexer->advance(lexer, false);
-        if (lexer->lookahead == '*') {
+        if (lexer->lookahead == '*' && valid_symbols[MULTI_COMMENT]) {
             lexer->advance(lexer, false);
 
             bool after_star = false;
@@ -58,7 +58,7 @@ bool tree_sitter_spthy_external_scanner_scan(void *payload, TSLexer *lexer, cons
                     break;
                 }
             }
-        } else if (lexer->lookahead == '/') {
+        } else if (lexer->lookahead == '/' && valid_symbols[SINGLE_COMMENT]) {
            lexer->advance(lexer, false);
 
            for (;;) {

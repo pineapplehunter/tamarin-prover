@@ -1,0 +1,1146 @@
+==================
+Configuration and relative includes
+==================
+
+theory Configuration configuration: "--heuristic=s --stop-on-trace=DFS --bound=20"
+begin
+#include "../shared/protocol.inc.spthy"
+end
+
+---
+
+(theory
+  (ident)
+  (commandline)
+  (preprocessor
+    (include
+      (path))))
+
+==================
+Unicode identifiers and constructor attributes
+==================
+
+theory Θεωρία
+begin
+function: κλειδί/1 [constructor], zéro/0 [private]
+rule Δοκιμή: [État(κλειδί(x))] --> [Out(zéro)]
+end
+
+---
+
+(theory
+  (ident)
+  (functions
+    (function_untyped
+      (ident)
+      (natural)
+      (function_attribute))
+    (function_untyped
+      (ident)
+      (natural)
+      (function_attribute)))
+  (rule
+    (simple_rule
+      (ident)
+      (premise
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (nary_app
+                        (ident)
+                        (arguments
+                          (mset_term
+                            (nat_term
+                              (xor_term
+                                (mul_term
+                                  (exp_term
+                                    (msg_var_or_nullary_fun
+                                      (ident)))))))))))))))))
+      (conclusion
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (msg_var_or_nullary_fun
+                        (ident)))))))))))))
+
+==================
+Natural number names and literal comment text
+==================
+
+theory Names
+begin
+builtins: natural-numbers
+rule Names: [] --> [Out(<%'42', %1, 1:nat, ' /* not a comment */ ', ~'fresh'>)]
+end
+
+---
+
+(theory
+  (ident)
+  (built_ins
+    (built_in))
+  (rule
+    (simple_rule
+      (ident)
+      (premise)
+      (conclusion
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (tuple_term
+                        (mset_term
+                          (nat_term
+                            (xor_term
+                              (mul_term
+                                (exp_term
+                                  (nat_name))))))
+                        (mset_term
+                          (nat_term
+                            (xor_term
+                              (mul_term
+                                (exp_term
+                                  (nat_var
+                                    (ident)))))))
+                        (mset_term
+                          (nat_term
+                            (xor_term
+                              (mul_term
+                                (exp_term
+                                  (nat_var
+                                    (ident)))))))
+                        (mset_term
+                          (nat_term
+                            (xor_term
+                              (mul_term
+                                (exp_term
+                                  (pub_name))))))
+                        (mset_term
+                          (nat_term
+                            (xor_term
+                              (mul_term
+                                (exp_term
+                                  (fresh_name))))))))))))))))))
+
+==================
+Nested and line comments
+==================
+
+/* before theory /* nested */ still outside */
+theory Comments // header
+begin
+/* a /* b /* c */ b */ a */
+rule R: [] /* empty */ --> [] // trailing
+end // last line
+
+---
+
+(theory
+  (multi_comment)
+  (ident)
+  (single_comment)
+  (multi_comment)
+  (rule
+    (simple_rule
+      (ident)
+      (premise)
+      (multi_comment)
+      (conclusion)))
+  (single_comment)
+  (single_comment))
+
+==================
+Left associative exponentiation and binary application scope
+==================
+
+theory Exponents
+begin
+builtins: diffie-hellman, symmetric-encryption
+rule R: [] --> [Out('g'^x^y), Out(senc{m}k^x), Out(senc{m}(k^x))]
+end
+
+---
+
+(theory
+  (ident)
+  (built_ins
+    (built_in)
+    (built_in))
+  (rule
+    (simple_rule
+      (ident)
+      (premise)
+      (conclusion
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (exp_term
+                        (exp_term
+                          (pub_name))
+                        (msg_var_or_nullary_fun
+                          (ident)))
+                      (msg_var_or_nullary_fun
+                        (ident)))))))))
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (exp_term
+                        (binary_app
+                          (ident)
+                          (arguments
+                            (mset_term
+                              (nat_term
+                                (xor_term
+                                  (mul_term
+                                    (exp_term
+                                      (msg_var_or_nullary_fun
+                                        (ident))))))))
+                          (msg_var_or_nullary_fun
+                            (ident))))
+                      (msg_var_or_nullary_fun
+                        (ident)))))))))
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (binary_app
+                        (ident)
+                        (arguments
+                          (mset_term
+                            (nat_term
+                              (xor_term
+                                (mul_term
+                                  (exp_term
+                                    (msg_var_or_nullary_fun
+                                      (ident))))))))
+                        (nested_term
+                          (mset_term
+                            (nat_term
+                              (xor_term
+                                (mul_term
+                                  (exp_term
+                                    (exp_term
+                                      (msg_var_or_nullary_fun
+                                        (ident)))
+                                    (msg_var_or_nullary_fun
+                                      (ident))))))))))))))))))))
+
+==================
+Right associative implication
+==================
+
+theory Implication
+begin
+lemma implication: "T ==> F ==> T"
+lemma conjunction: "T | F & T"
+end
+
+---
+
+(theory
+  (ident)
+  (lemma
+    (ident)
+    (imp
+      (atom)
+      (imp
+        (atom)
+        (atom))))
+  (lemma
+    (ident)
+    (disjunction
+      (atom)
+      (conjunction
+        (atom)
+        (atom)))))
+
+==================
+Diff terms and proof skeletons
+==================
+
+theory Diff
+begin
+rule R: [In(diff('left','right'))] --[Seen(diff(x,y))]-> [Out(x)]
+lemma trace [sources, heuristic=s]: all-traces "All x #i. Seen(x)@i ==> Ex #j. Seen(x)@j & #j < #i"
+by sorry
+diffLemma equivalence: by rule-equivalence
+end
+
+---
+
+(theory
+  (ident)
+  (rule
+    (simple_rule
+      (ident)
+      (premise
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (nary_app
+                        (ident)
+                        (arguments
+                          (mset_term
+                            (nat_term
+                              (xor_term
+                                (mul_term
+                                  (exp_term
+                                    (pub_name))))))
+                          (mset_term
+                            (nat_term
+                              (xor_term
+                                (mul_term
+                                  (exp_term
+                                    (pub_name))))))))))))))))
+      (action_fact
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (nary_app
+                        (ident)
+                        (arguments
+                          (mset_term
+                            (nat_term
+                              (xor_term
+                                (mul_term
+                                  (exp_term
+                                    (msg_var_or_nullary_fun
+                                      (ident)))))))
+                          (mset_term
+                            (nat_term
+                              (xor_term
+                                (mul_term
+                                  (exp_term
+                                    (msg_var_or_nullary_fun
+                                      (ident)))))))))))))))))
+      (conclusion
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (msg_var_or_nullary_fun
+                        (ident))))))))))))
+  (lemma
+    (ident)
+    (diff_lemma_attrs
+      (lemma_attr)
+      (lemma_attr
+        (standard_proof_method_ranking)))
+    (trace_quantifier)
+    (quantified_formula
+      (msg_var_or_nullary_fun
+        (ident))
+      (temporal_var
+        (ident))
+      (imp
+        (action_constraint
+          (linear_fact
+            (ident)
+            (arguments
+              (mset_term
+                (nat_term
+                  (xor_term
+                    (mul_term
+                      (exp_term
+                        (msg_var_or_nullary_fun
+                          (ident)))))))))
+          (temporal_var
+            (ident)))
+        (quantified_formula
+          (temporal_var
+            (ident))
+          (conjunction
+            (action_constraint
+              (linear_fact
+                (ident)
+                (arguments
+                  (mset_term
+                    (nat_term
+                      (xor_term
+                        (mul_term
+                          (exp_term
+                            (msg_var_or_nullary_fun
+                              (ident)))))))))
+              (temporal_var
+                (ident)))
+            (temp_var_order
+              (temporal_var
+                (ident))
+              (temporal_var
+                (ident)))))))
+    (by_method
+      (proof_method)))
+  (diff_lemma
+    (ident)
+    (by_method
+      (proof_method))))
+
+==================
+Signatures macros predicates and embedded restrictions
+==================
+
+theory Signature
+begin
+functions: f/1, g/1 [destructor], c/0 [private]
+equations [convergent]: g(f(x)) = x
+macros: twice(x) = f(f(x))
+predicates: Equal(x,y) <=> x = y
+rule R [colour='#aabbcc', x-note="editor"]:
+let x = twice(c) in
+[In(x)] --[Seen(x), _restrict(Equal(x,c))]-> [Out(g(x))]
+restriction OnlyOnce: "All x #i #j. Seen(x)@i & Seen(x)@j ==> #i = #j"
+end
+
+---
+
+(theory
+  (ident)
+  (functions
+    (function_untyped
+      (ident)
+      (natural))
+    (function_untyped
+      (ident)
+      (natural)
+      (function_attribute))
+    (function_untyped
+      (ident)
+      (natural)
+      (function_attribute)))
+  (equations
+    (equation
+      (mset_term
+        (nat_term
+          (xor_term
+            (mul_term
+              (exp_term
+                (nary_app
+                  (ident)
+                  (arguments
+                    (mset_term
+                      (nat_term
+                        (xor_term
+                          (mul_term
+                            (exp_term
+                              (nary_app
+                                (ident)
+                                (arguments
+                                  (mset_term
+                                    (nat_term
+                                      (xor_term
+                                        (mul_term
+                                          (exp_term
+                                            (msg_var_or_nullary_fun
+                                              (ident)))))))))))))))))))))
+      (mset_term
+        (nat_term
+          (xor_term
+            (mul_term
+              (exp_term
+                (msg_var_or_nullary_fun
+                  (ident)))))))))
+  (macros
+    (macro
+      (ident)
+      (msg_var_or_nullary_fun
+        (ident))
+      (mset_term
+        (nat_term
+          (xor_term
+            (mul_term
+              (exp_term
+                (nary_app
+                  (ident)
+                  (arguments
+                    (mset_term
+                      (nat_term
+                        (xor_term
+                          (mul_term
+                            (exp_term
+                              (nary_app
+                                (ident)
+                                (arguments
+                                  (mset_term
+                                    (nat_term
+                                      (xor_term
+                                        (mul_term
+                                          (exp_term
+                                            (msg_var_or_nullary_fun
+                                              (ident)))))))))))))))))))))))
+  (predicates
+    (predicate
+      (ident)
+      (arguments
+        (mset_term
+          (nat_term
+            (xor_term
+              (mul_term
+                (exp_term
+                  (msg_var_or_nullary_fun
+                    (ident)))))))
+        (mset_term
+          (nat_term
+            (xor_term
+              (mul_term
+                (exp_term
+                  (msg_var_or_nullary_fun
+                    (ident))))))))
+      (term_eq
+        (mset_term
+          (nat_term
+            (xor_term
+              (mul_term
+                (exp_term
+                  (msg_var_or_nullary_fun
+                    (ident)))))))
+        (mset_term
+          (nat_term
+            (xor_term
+              (mul_term
+                (exp_term
+                  (msg_var_or_nullary_fun
+                    (ident))))))))))
+  (rule
+    (simple_rule
+      (ident)
+      (rule_attrs
+        (rule_attr
+          (rule_attr_color
+            (hexcolor)))
+        (rule_attr
+          (rule_extended_attribute
+            (xattribute_ident)
+            (no_double_quotes))))
+      (rule_let_block
+        (rule_let_term
+          (msg_var_or_nullary_fun
+            (ident))
+          (mset_term
+            (nat_term
+              (xor_term
+                (mul_term
+                  (exp_term
+                    (nary_app
+                      (ident)
+                      (arguments
+                        (mset_term
+                          (nat_term
+                            (xor_term
+                              (mul_term
+                                (exp_term
+                                  (msg_var_or_nullary_fun
+                                    (ident))))))))))))))))
+      (premise
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (msg_var_or_nullary_fun
+                        (ident))))))))))
+      (action_fact
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (msg_var_or_nullary_fun
+                        (ident)))))))))
+        (embedded_restriction
+          (predicate_ref
+            (ident)
+            (arguments
+              (mset_term
+                (nat_term
+                  (xor_term
+                    (mul_term
+                      (exp_term
+                        (msg_var_or_nullary_fun
+                          (ident)))))))
+              (mset_term
+                (nat_term
+                  (xor_term
+                    (mul_term
+                      (exp_term
+                        (msg_var_or_nullary_fun
+                          (ident)))))))))))
+      (conclusion
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (nary_app
+                        (ident)
+                        (arguments
+                          (mset_term
+                            (nat_term
+                              (xor_term
+                                (mul_term
+                                  (exp_term
+                                    (msg_var_or_nullary_fun
+                                      (ident)))))))))))))))))))
+  (restriction
+    (ident)
+    (quantified_formula
+      (msg_var_or_nullary_fun
+        (ident))
+      (temporal_var
+        (ident))
+      (temporal_var
+        (ident))
+      (imp
+        (conjunction
+          (action_constraint
+            (linear_fact
+              (ident)
+              (arguments
+                (mset_term
+                  (nat_term
+                    (xor_term
+                      (mul_term
+                        (exp_term
+                          (msg_var_or_nullary_fun
+                            (ident)))))))))
+            (temporal_var
+              (ident)))
+          (action_constraint
+            (linear_fact
+              (ident)
+              (arguments
+                (mset_term
+                  (nat_term
+                    (xor_term
+                      (mul_term
+                        (exp_term
+                          (msg_var_or_nullary_fun
+                            (ident)))))))))
+            (temporal_var
+              (ident))))
+        (temp_var_eq
+          (temporal_var
+            (ident))
+          (temporal_var
+            (ident)))))))
+
+==================
+SAPIC typed definitions calls patterns and state
+==================
+
+theory Processes
+begin
+functions: loc/1, dec/2 [destructor]
+let Worker(k:key) =
+  in('channel',<x,=k>);
+  let y = dec(x,k) in
+    lock k; insert k,y;
+    lookup k as v in event Read(v); unlock k; out(v)
+    else delete k
+  else 0
+process: new k:key; (Worker(k) | (out('ready'))@loc('site'))
+end
+
+---
+
+(theory
+  (ident)
+  (functions
+    (function_untyped
+      (ident)
+      (natural))
+    (function_untyped
+      (ident)
+      (natural)
+      (function_attribute)))
+  (let
+    (ident)
+    (arguments
+      (mset_term
+        (nat_term
+          (xor_term
+            (mul_term
+              (exp_term
+                (custom_var
+                  (msg_var_or_nullary_fun
+                    (ident))
+                  (ident))))))))
+    (input
+      (mset_term
+        (nat_term
+          (xor_term
+            (mul_term
+              (exp_term
+                (pub_name))))))
+      (mset_term
+        (nat_term
+          (xor_term
+            (mul_term
+              (exp_term
+                (tuple_term
+                  (mset_term
+                    (nat_term
+                      (xor_term
+                        (mul_term
+                          (exp_term
+                            (msg_var_or_nullary_fun
+                              (ident)))))))
+                  (mset_term
+                    (nat_term
+                      (xor_term
+                        (mul_term
+                          (exp_term
+                            (comp_var
+                              (msg_var_or_nullary_fun
+                                (ident))))))))))))))
+      (process_let
+        (term_eq
+          (mset_term
+            (nat_term
+              (xor_term
+                (mul_term
+                  (exp_term
+                    (msg_var_or_nullary_fun
+                      (ident)))))))
+          (mset_term
+            (nat_term
+              (xor_term
+                (mul_term
+                  (exp_term
+                    (nary_app
+                      (ident)
+                      (arguments
+                        (mset_term
+                          (nat_term
+                            (xor_term
+                              (mul_term
+                                (exp_term
+                                  (msg_var_or_nullary_fun
+                                    (ident)))))))
+                        (mset_term
+                          (nat_term
+                            (xor_term
+                              (mul_term
+                                (exp_term
+                                  (msg_var_or_nullary_fun
+                                    (ident)))))))))))))))
+        (set_lock
+          (mset_term
+            (nat_term
+              (xor_term
+                (mul_term
+                  (exp_term
+                    (msg_var_or_nullary_fun
+                      (ident)))))))
+          (set_state
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (msg_var_or_nullary_fun
+                        (ident)))))))
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (msg_var_or_nullary_fun
+                        (ident)))))))
+            (read_state
+              (mset_term
+                (nat_term
+                  (xor_term
+                    (mul_term
+                      (exp_term
+                        (msg_var_or_nullary_fun
+                          (ident)))))))
+              (msg_var_or_nullary_fun
+                (ident))
+              (event
+                (linear_fact
+                  (ident)
+                  (arguments
+                    (mset_term
+                      (nat_term
+                        (xor_term
+                          (mul_term
+                            (exp_term
+                              (msg_var_or_nullary_fun
+                                (ident)))))))))
+                (remove_lock
+                  (mset_term
+                    (nat_term
+                      (xor_term
+                        (mul_term
+                          (exp_term
+                            (msg_var_or_nullary_fun
+                              (ident)))))))
+                  (output
+                    (mset_term
+                      (nat_term
+                        (xor_term
+                          (mul_term
+                            (exp_term
+                              (msg_var_or_nullary_fun
+                                (ident))))))))))
+              (delete_state
+                (mset_term
+                  (nat_term
+                    (xor_term
+                      (mul_term
+                        (exp_term
+                          (msg_var_or_nullary_fun
+                            (ident)))))))))))
+        (null))))
+  (process
+    (binding
+      (custom_var
+        (msg_var_or_nullary_fun
+          (ident))
+        (ident))
+      (nested_process
+        (deterministic_choice
+          (predefined_process
+            (ident)
+            (arguments
+              (mset_term
+                (nat_term
+                  (xor_term
+                    (mul_term
+                      (exp_term
+                        (msg_var_or_nullary_fun
+                          (ident)))))))))
+          (location_process
+            (output
+              (mset_term
+                (nat_term
+                  (xor_term
+                    (mul_term
+                      (exp_term
+                        (pub_name)))))))
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (nary_app
+                        (ident)
+                        (arguments
+                          (mset_term
+                            (nat_term
+                              (xor_term
+                                (mul_term
+                                  (exp_term
+                                    (pub_name)))))))))))))))))))
+
+==================
+SAPIC sequence binds before parallel
+==================
+
+theory Sequence
+begin
+let P = 0
+let Q = 0
+process: out('message'); P | Q
+end
+
+---
+
+(theory
+  (ident)
+  (let
+    (ident)
+    (null))
+  (let
+    (ident)
+    (null))
+  (process
+    (deterministic_choice
+      (output
+        (mset_term
+          (nat_term
+            (xor_term
+              (mul_term
+                (exp_term
+                  (pub_name))))))
+        (predefined_process
+          (ident)))
+      (predefined_process
+        (ident)))))
+
+==================
+SAPIC replication contains a complete process
+==================
+
+theory Replication
+begin
+let P = 0
+let Q = 0
+process: !P | Q
+end
+
+---
+
+(theory
+  (ident)
+  (let
+    (ident)
+    (null))
+  (let
+    (ident)
+    (null))
+  (process
+    (replication
+      (deterministic_choice
+        (predefined_process
+          (ident))
+        (predefined_process
+          (ident))))))
+
+==================
+SAPIC branches and dangling else
+==================
+
+theory Branches
+begin
+let P = 0
+let Q = 0
+process: if 'a' = 'b' then if T then P else Q else P | Q
+end
+
+---
+
+(theory
+  (ident)
+  (let
+    (ident)
+    (null))
+  (let
+    (ident)
+    (null))
+  (process
+    (conditional
+      (equality_check
+        (mset_term
+          (nat_term
+            (xor_term
+              (mul_term
+                (exp_term
+                  (pub_name))))))
+        (mset_term
+          (nat_term
+            (xor_term
+              (mul_term
+                (exp_term
+                  (pub_name)))))))
+      (conditional
+        (atom)
+        (predefined_process
+          (ident))
+        (predefined_process
+          (ident)))
+      (deterministic_choice
+        (predefined_process
+          (ident))
+        (predefined_process
+          (ident))))))
+
+==================
+SAPIC multiset union is not process choice
+==================
+
+theory Union
+begin
+builtins: multiset
+process: insert 'key', x+'one'; out(x) + 0
+end
+
+---
+
+(theory
+  (ident)
+  (built_ins
+    (built_in))
+  (process
+    (non_deterministic_choice
+      (set_state
+        (mset_term
+          (nat_term
+            (xor_term
+              (mul_term
+                (exp_term
+                  (pub_name))))))
+        (mset_term
+          (mset_term
+            (nat_term
+              (xor_term
+                (mul_term
+                  (exp_term
+                    (msg_var_or_nullary_fun
+                      (ident)))))))
+          (nat_term
+            (xor_term
+              (mul_term
+                (exp_term
+                  (pub_name))))))
+        (output
+          (mset_term
+            (nat_term
+              (xor_term
+                (mul_term
+                  (exp_term
+                    (msg_var_or_nullary_fun
+                      (ident)))))))))
+      (null))))
+
+==================
+SAPIC embedded rules and process equivalence
+==================
+
+theory Embedded
+begin
+let P = [In(<x,=y>)] --[Seen(x)]-> [Out(x)]; 0
+equivLemma: (P) (out('x'))
+diffEquivLemma: out(diff('a','b'))
+end
+
+---
+
+(theory
+  (ident)
+  (let
+    (ident)
+    (inline_msr_process
+      (premise
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (tuple_term
+                        (mset_term
+                          (nat_term
+                            (xor_term
+                              (mul_term
+                                (exp_term
+                                  (msg_var_or_nullary_fun
+                                    (ident)))))))
+                        (mset_term
+                          (nat_term
+                            (xor_term
+                              (mul_term
+                                (exp_term
+                                  (comp_var
+                                    (msg_var_or_nullary_fun
+                                      (ident)))))))))))))))))
+      (action_fact
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (msg_var_or_nullary_fun
+                        (ident))))))))))
+      (conclusion
+        (linear_fact
+          (ident)
+          (arguments
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (msg_var_or_nullary_fun
+                        (ident))))))))))
+      (null)))
+  (equiv_lemma
+    (nested_process
+      (predefined_process
+        (ident)))
+    (nested_process
+      (output
+        (mset_term
+          (nat_term
+            (xor_term
+              (mul_term
+                (exp_term
+                  (pub_name)))))))))
+  (diff_equiv_lemma
+    (output
+      (mset_term
+        (nat_term
+          (xor_term
+            (mul_term
+              (exp_term
+                (nary_app
+                  (ident)
+                  (arguments
+                    (mset_term
+                      (nat_term
+                        (xor_term
+                          (mul_term
+                            (exp_term
+                              (pub_name))))))
+                    (mset_term
+                      (nat_term
+                        (xor_term
+                          (mul_term
+                            (exp_term
+                              (pub_name))))))))))))))))

@@ -19,6 +19,10 @@ module.exports = grammar({
       [$.pub_var], [$.fresh_var], [$.temporal_var], [$.nat_var],
       [$.pub_var, $.fresh_var, $.msg_var_or_nullary_fun, $.temporal_var, $.nat_var],
       [$.pub_var, $.fresh_var, $.msg_var_or_nullary_fun, $.nat_var],
+      [$.nullary_fun, $.msg_var_or_nullary_fun, $.temporal_var_optional_prefix],
+      [$.msg_var_or_nullary_fun, $.temporal_var_optional_prefix],
+      [$.temporal_var, $.temporal_var_optional_prefix],
+      [$.pub_var, $.fresh_var, $.msg_var_or_nullary_fun, $.temporal_var, $.nat_var, $.temporal_var_optional_prefix],
 
       // Conflict since both look alike, but they don't appear in the same scenarios.
       [$.nary_app, $.predicate_ref],
@@ -50,6 +54,8 @@ module.exports = grammar({
           'MUL_SET',
           'TUPLE',
           'NULLARY_FUN',
+          // A '+' in an action's term is multiset union, not process choice.
+          'CHOICE',
 
           // Formula
           'ATOM',
@@ -68,12 +74,12 @@ module.exports = grammar({
           'DIFF'
       ],
       [
-          'REPLICATION',
           'EVENT',
           'CHOICE',
           'PROCESS_LET',
           'LOOKUP',
-          'CONDITIONAL'
+          'CONDITIONAL',
+          'REPLICATION'
       ],
   ],
 
@@ -84,7 +90,7 @@ module.exports = grammar({
       theory: $ => seq(
           'theory',
           field('theory_name', $.ident),
-          optional(seq('configuration', ':', '"', $.commandline , '"')),
+          optional(seq('configuration', ':', $.commandline)),
           'begin',
           repeat($._body_item),
           'end',
@@ -93,15 +99,8 @@ module.exports = grammar({
           )
       ),
 
-      commandline: $ => repeat1(
-            choice('--auto-sources',
-                    seq('--stop-on-trace','=',$._search_strategy)
-            )),
-
-      _search_strategy: $ => choice(
-            'BFS','DFS','SEQDFS',
-            'bfs','dfs','seqdfs'
-      ),
+      // Configuration is a quoted command line, not a fixed list of flags.
+      commandline: _ => token(seq('"', repeat(choice(/[^"\\]+/, /\\./)), '"')),
 
 
       _body_item: $ => choice(
@@ -146,8 +145,7 @@ module.exports = grammar({
       ),
 
       include: $ => seq(
-          '#include',
-          '"', $.path, '"'
+          '#include', $.path
       ),
 
       _ifdef_formula: $ => choice(
@@ -220,7 +218,7 @@ module.exports = grammar({
 
       // Functions:
       functions: $ => prec.right(seq(
-          'functions',
+          choice('functions', 'function'),
           ':',
           $._function_sym,
           repeat(seq(
@@ -254,6 +252,7 @@ module.exports = grammar({
       function_attribute: $ => choice(
             'private',
             'destructor',
+            'constructor',
             'AC',
             'NDC',
             'NDC-diff',
@@ -341,7 +340,7 @@ module.exports = grammar({
 
       oracle_proof_method_ranking: $ => seq(
           choice('O', 'o'),
-          optional(seq('"', $.param, '"'))
+          optional($.param)
       ),
 
       tactic_proof_method_ranking: $ => seq(
@@ -356,16 +355,8 @@ module.exports = grammar({
           'tactic', ':',
           $.ident,
           optional($.presort),
-          choice(
-              seq(
-                  repeat1($.prio),
-                  repeat($.deprio)
-              ),
-              seq(
-                  repeat($.prio),
-                  repeat1($.deprio)
-              )
-          )
+          repeat($.prio),
+          repeat($.deprio)
       ),
 
       presort: $ => seq(
@@ -401,22 +392,20 @@ module.exports = grammar({
       ),
 
       or_function: $ => prec.left('LOGICAL_OR', seq(
-          $._function, '|', $._function
+          $._function, choice('|', '∨'), $._function
       )),
 
       and_function: $ => prec.left('LOGICAL_AND', seq(
-          $._function, '&', $._function
+          $._function, choice('&', '∧'), $._function
       )),
 
       not_function: $ => prec('LOGICAL_NOT', seq(
-          'not', $._function
+          choice('not', '¬'), $._function
       )),
 
       std_function: $ => seq(
           $.function_name,
-          repeat(seq(
-              '"', $.param, '"'
-          ))
+          repeat($.param)
       ),
 
       function_name: $ => choice(
@@ -439,6 +428,14 @@ module.exports = grammar({
       ),
 
       _process: $ => choice(
+          $._action_process,
+          $.deterministic_choice,
+          $.non_deterministic_choice
+      ),
+
+      // An action continuation binds more tightly than parallel/choice.
+      // Branches and replication, in contrast, contain a complete process.
+      _action_process: $ => choice(
           $._elementary_process,
           $._extended_process,
           $._stateful_process,
@@ -455,8 +452,6 @@ module.exports = grammar({
           $.input,
           $.conditional,
           $.process_let,
-          $.deterministic_choice,
-          $.non_deterministic_choice,
           $.null
       ),
 
@@ -473,12 +468,12 @@ module.exports = grammar({
           $.remove_lock
       ),
 
-      location_process: $ => seq(
+      location_process: $ => prec.right('MUL_SET', seq(
           '(',
           $._process,
           ')', '@',
-          field('location_identifier', choice($._literal, $.tuple_term))
-      ),
+          field('location_identifier', $.mset_term)
+      )),
 
       inline_msr_process: $ => prec.right(seq(
           $.premise,
@@ -487,40 +482,43 @@ module.exports = grammar({
               $.action_fact
           ),
           $.conclusion,
-          optional(seq(';', $._process))
+          optional(seq(';', $._action_process))
       )),
 
       nested_process: $ => seq(
           '(', $._process, ')'
       ),
 
-      predefined_process: $ => prec.left('PROCESS', $.mset_term),
+      predefined_process: $ => prec.left('PROCESS', seq(
+          field('process_identifier', $._term_ident),
+          optional(seq('(', optional($.arguments), ')'))
+      )),
 
       // elementary processes:
       binding: $ => prec.right(seq(
           'new', $._literal,
-          optional(seq(';', $._process))
+          optional(seq(';', $._action_process))
       )),
 
       output: $ => prec.right(choice(
           seq(
               'out', '(', $.mset_term, ',', $.mset_term, ')',
-              optional(seq(';', $._process))
+              optional(seq(';', $._action_process))
           ),
           seq(
               'out', '(', $.mset_term, ')',
-              optional(seq(';', $._process))
+              optional(seq(';', $._action_process))
           )
       )),
 
       input: $ => prec.right(choice(
           seq(
               'in', '(', $.mset_term, ',', $.mset_term, ')',
-              optional(seq(';', $._process))
+              optional(seq(';', $._action_process))
           ),
           seq(
               'in', '(', $.mset_term, ')',
-              optional(seq(';', $._process))
+              optional(seq(';', $._action_process))
           )
       )),
 
@@ -537,15 +535,15 @@ module.exports = grammar({
       )),
 
       deterministic_choice: $ => prec.left('CHOICE', seq(
-          $._process,
+          field('left', $._process),
           choice('|', '||'),
-          $._process
+          field('right', $._action_process)
       )),
 
       non_deterministic_choice: $ => prec.left('CHOICE', seq(
-          $._process,
+          field('left', $._process),
           '+',
-          $._process
+          field('right', $._action_process)
       )),
 
       null: $ => '0',
@@ -553,12 +551,11 @@ module.exports = grammar({
       // extended processes:
       event: $ => prec.right('EVENT', seq(
           'event', $._fact,
-          optional(seq(';', $._process))
+          optional(seq(';', $._action_process))
       )),
 
       replication: $ => prec.right('REPLICATION', seq(
-          '!', $._process,
-          optional(seq(';', $._process))
+          '!', field('body', $._process)
       )),
 
       // stateful processes:
@@ -566,30 +563,29 @@ module.exports = grammar({
           'insert',
           field('from', $.mset_term), ',',
           field('to', $.mset_term),
-          optional(seq(';', $._process))
+          optional(seq(';', $._action_process))
       )),
 
       delete_state: $ => prec.right(seq(
           'delete', $.mset_term,
-          optional(seq(';', $._process))
+          optional(seq(';', $._action_process))
       )),
 
       read_state: $ => prec.right('LOOKUP', seq(
           'lookup', field('from', $.mset_term),
           'as', field('to',$._lvar),
           'in', field('in', $._process),
-          optional(seq('else', field('else', $._process))),
-          optional(seq(';', $._process))
+          optional(seq('else', field('else', $._process)))
       )),
 
       set_lock: $ => prec.right(seq(
           'lock', $.mset_term,
-          optional(seq(';', $._process))
+          optional(seq(';', $._action_process))
       )),
 
       remove_lock: $ => prec.right(seq(
           'unlock', $.mset_term,
-          optional(seq(';', $._process))
+          optional(seq(';', $._action_process))
       )),
 
       _condition: $ => choice(
@@ -607,8 +603,9 @@ module.exports = grammar({
        */
       let: $ => seq(
           'let',
-          field('let_identifier', $.mset_term), '=',
-          $._process
+          field('let_identifier', $._term_ident),
+          optional(seq('(', optional($.arguments), ')')),
+          '=', field('body', $._process)
       ),
 
       /*
@@ -617,7 +614,7 @@ module.exports = grammar({
       export: $ => seq(
           'export',
           field('export_identifier', $.ident),
-          ':', '"', $.export_query, '"'
+          ':', $.export_query
       ),
 
       /*
@@ -829,7 +826,7 @@ module.exports = grammar({
       persistent_fact: $ => seq('!', $._base_fact),
 
       _base_fact: $ => prec.left(seq(
-          field('fact_identifier', alias($.fact_identifier, $.ident)),
+          field('fact_identifier', alias(choice($.fact_identifier, 'F', 'T'), $.ident)),
           '(',
           optional($.arguments),
           ')',
@@ -920,11 +917,13 @@ module.exports = grammar({
 
       lemma_attr: $ => choice(
           'sources',
+          'typing',
           'reuse',
+          'diff_reuse',
           'use_induction',
-          seq('output=', '[', $.language, repeat(seq(',', $.language)), ']'),
-          seq('hide_lemma=', $.ident),
-          seq('heuristic=', field('proof_method_ranking', repeat1($._proof_method_ranking)))
+          seq('output', '=', '[', $.language, repeat(seq(',', $.language)), ']'),
+          seq('hide_lemma', '=', $.ident),
+          seq('heuristic', '=', field('proof_method_ranking', repeat1($._proof_method_ranking)))
       ),
 
       language: $ => choice(
@@ -1012,10 +1011,7 @@ module.exports = grammar({
       ),
 
       cases: $ => seq(
-          $.case,
-          repeat(seq(
-              'next', $.case
-          )),
+          optional(seq($.case, repeat(seq('next', $.case)))),
           'qed'
       ),
 
@@ -1040,6 +1036,9 @@ module.exports = grammar({
           'induction',
           'rule-equivalence',
           'backward-search',
+          'INVALIDATED',
+          'UNFINISHABLE',
+          'UNFINISHABLEdiff',
           'ATTACK'
       ),
 
@@ -1052,6 +1051,7 @@ module.exports = grammar({
           $.action_constraint,
           $.chain_constraint,
           $.disjunction_split_constraint,
+          $.subterm_rel,
           $.eq_split_constraint
       ),
 
@@ -1059,12 +1059,6 @@ module.exports = grammar({
           $._fact,
           '▶',
           $.natural_subscript,
-          $.temporal_var
-      ),
-
-      action_constraint: $ => seq(
-          $._fact,
-          '@',
           $.temporal_var
       ),
 
@@ -1111,12 +1105,9 @@ module.exports = grammar({
           '>'
       )),
 
-      mset_term: $ => prec.left('MUL_SET', seq(
+      mset_term: $ => prec.left('MUL_SET', choice(
           field('left', $.nat_term),
-          repeat(seq(
-            choice('++', '+'),
-            field('right', $.nat_term)
-          ))
+          seq(field('left', $.mset_term), choice('++', '+'), field('right', $.nat_term))
       )),
 
       nat_term: $ => prec.left('ADD', seq(
@@ -1143,12 +1134,9 @@ module.exports = grammar({
           ))
       )),
 
-      exp_term: $ => prec.right('EXPONENTIAL', seq(
+      exp_term: $ => prec.left('EXPONENTIAL', choice(
           field('base', $._term),
-          repeat(seq(
-             '^',
-            field('exponent', $._term)
-          ))
+          seq(field('base', $.exp_term), '^', field('exponent', $._term))
       )),
 
       nested_term: $ => prec('NESTED', seq(
@@ -1167,7 +1155,7 @@ module.exports = grammar({
           '{',
           field('argument', $.arguments),
           '}',
-          field('argument', $.mset_term)
+          field('argument', $._term)
       )),
 
       nary_app: $ => prec('FUNCTION', seq(
@@ -1178,7 +1166,7 @@ module.exports = grammar({
       arguments: $ => seq(
           field('argument', choice($.mset_term, $.temporal_var)),
           repeat(seq(
-              ',', field('argument', $.mset_term)
+              ',', field('argument', choice($.mset_term, $.temporal_var))
           ))
       ),
 
@@ -1189,6 +1177,7 @@ module.exports = grammar({
       _literal: $ => choice(
           $.pub_name,
           $.fresh_name,
+          $.nat_name,
           $._non_temporal_var, // non-temporal variable
           $.comp_var, // compare variable for pattern matching
           $._custom_type_var // variable with custom type
@@ -1306,34 +1295,17 @@ module.exports = grammar({
       )),
 
       // temporal prefix is optional for action constraints and temporal ordering
-      temporal_var_optional_prefix: $ => prec('NULLARY_FUN', choice(
-          seq(
-              optional('#'),
-              field('variable_identifier', $._term_ident),
-              optional(seq(
-                  '.', $.natural
-              ))
-          ),
-          seq(
-              field('variable_identifier', $._term_ident),
-              optional(seq(
-                  '.', $.natural
-              )),
-              ':', 'temporal'
-          )
+      temporal_var_optional_prefix: $ => prec('VARIABLE', seq(
+          optional('#'),
+          field('variable_identifier', $._term_ident),
+          optional(seq('.', $.natural)),
+          optional(seq(':', 'node'))
       )),
 
-      pub_name: $ =>  seq( // fixed, public name
-          "'",
-          /[^\n']+/,
-          "'"
-      ),
-
-      fresh_name: $ => seq( // fixed, fresh name
-          "~'",
-          /[^\n']+/,
-          "'"
-      ),
+      // Keep whitespace and comment-like text inside names literal.
+      pub_name: _ => token(seq("'", /[^\n']+/, "'")),
+      fresh_name: _ => token(seq("~'", /[^\n']+/, "'")),
+      nat_name: _ => token(seq("%'", /[^\n']+/, "'")),
 
 
       /*
@@ -1363,7 +1335,7 @@ module.exports = grammar({
           field('right', $._formula)
       )),
 
-      imp: $ => prec.left('LOGICAL_IMPLICATION', seq(
+      imp: $ => prec.right('LOGICAL_IMPLICATION', seq(
           field('left', $._formula),
           choice(token(prec(1, '==>')), '⇒'),
           field('right', $._formula)
@@ -1406,11 +1378,18 @@ module.exports = grammar({
           field('right', alias($.temporal_var_optional_prefix, $.temporal_var))
       )),
 
-      temp_var_eq: $ => prec('ATOM', seq(
-          field('left', alias($.temporal_var_optional_prefix, $.temporal_var)),
-          '=',
-          field('right', alias($.temporal_var_optional_prefix, $.temporal_var))
-      )),
+      // Bare x = y is message equality. At least one explicit node sort
+      // selects node equality; the other operand may omit its prefix.
+      temp_var_eq: $ => prec.dynamic(2, prec('ATOM', choice(
+          seq(
+              field('left', $.temporal_var), '=',
+              field('right', alias($.temporal_var_optional_prefix, $.temporal_var))
+          ),
+          seq(
+              field('left', alias($.temporal_var_optional_prefix, $.temporal_var)), '=',
+              field('right', $.temporal_var)
+          )
+      ))),
 
       action_constraint: $ => prec('ATOM', seq(
           field('fact', $._fact),
@@ -1418,11 +1397,12 @@ module.exports = grammar({
           field('variable', alias($.temporal_var_optional_prefix, $.temporal_var))
       )),
 
-      term_eq: $ => prec('ATOM', seq(
+      // With no explicit node sort, equality is term equality (as in Parsec).
+      term_eq: $ => prec.dynamic(1, prec('ATOM', seq(
           field('left', $.mset_term),
           '=',
           field('right', $.mset_term)
-      )),
+      ))),
 
       subterm_rel: $ => prec('ATOM', seq(
           field('left', $.mset_term),
@@ -1482,15 +1462,15 @@ module.exports = grammar({
           )
       ),
 
-      fact_identifier: $ => token(prec(1, /[A-Z][A-Za-z0-9_]*/)),
+      fact_identifier: _ => token(prec(1, /\p{Lu}[\p{L}\p{N}_]*/)),
 
-      ident: $ => /[A-Za-z0-9]\w*/,
+      ident: _ => /[\p{L}\p{N}][\p{L}\p{N}_]*/,
 
-      param: $ => /[^"]*/,
+      param: _ => token(seq('"', /[^"]*/, '"')),
 
-      path: $ => /[A-Za-z0-9-\_]*/,
+      path: _ => token(seq('"', /[^"\r\n]*/, '"')),
 
-      export_query: $ => /(\\"|[^"])*/,
+      export_query: _ => token(seq('"', repeat(choice(/[^"\\]+/, /\\["\\]/)), '"')),
 
       natural: $ => /[0-9]+/,
 

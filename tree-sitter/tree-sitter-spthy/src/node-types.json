@@ -212,6 +212,10 @@
           "named": true
         },
         {
+          "type": "nat_name",
+          "named": true
+        },
+        {
           "type": "nat_var",
           "named": true
         },
@@ -260,11 +264,67 @@
         "required": true,
         "types": [
           {
+            "type": "any_var",
+            "named": true
+          },
+          {
             "type": "arguments",
             "named": true
           },
           {
-            "type": "mset_term",
+            "type": "binary_app",
+            "named": true
+          },
+          {
+            "type": "comp_var",
+            "named": true
+          },
+          {
+            "type": "custom_var",
+            "named": true
+          },
+          {
+            "type": "fresh_name",
+            "named": true
+          },
+          {
+            "type": "fresh_var",
+            "named": true
+          },
+          {
+            "type": "msg_var_or_nullary_fun",
+            "named": true
+          },
+          {
+            "type": "nary_app",
+            "named": true
+          },
+          {
+            "type": "nat_name",
+            "named": true
+          },
+          {
+            "type": "nat_var",
+            "named": true
+          },
+          {
+            "type": "nested_term",
+            "named": true
+          },
+          {
+            "type": "nullary_fun",
+            "named": true
+          },
+          {
+            "type": "pub_name",
+            "named": true
+          },
+          {
+            "type": "pub_var",
+            "named": true
+          },
+          {
+            "type": "tuple_term",
             "named": true
           }
         ]
@@ -314,10 +374,6 @@
           "named": true
         },
         {
-          "type": "deterministic_choice",
-          "named": true
-        },
-        {
           "type": "event",
           "named": true
         },
@@ -346,15 +402,15 @@
           "named": true
         },
         {
+          "type": "nat_name",
+          "named": true
+        },
+        {
           "type": "nat_var",
           "named": true
         },
         {
           "type": "nested_process",
-          "named": true
-        },
-        {
-          "type": "non_deterministic_choice",
           "named": true
         },
         {
@@ -581,7 +637,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "case",
@@ -608,11 +664,6 @@
         }
       ]
     }
-  },
-  {
-    "type": "commandline",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "comp_var",
@@ -644,6 +695,10 @@
         },
         {
           "type": "msg_var_or_nullary_fun",
+          "named": true
+        },
+        {
+          "type": "nat_name",
           "named": true
         },
         {
@@ -1109,6 +1164,10 @@
         {
           "type": "premise_constraint",
           "named": true
+        },
+        {
+          "type": "subterm_rel",
+          "named": true
         }
       ]
     }
@@ -1154,6 +1213,10 @@
         },
         {
           "type": "msg_var_or_nullary_fun",
+          "named": true
+        },
+        {
+          "type": "nat_name",
           "named": true
         },
         {
@@ -1207,10 +1270,6 @@
           "named": true
         },
         {
-          "type": "deterministic_choice",
-          "named": true
-        },
-        {
           "type": "event",
           "named": true
         },
@@ -1232,10 +1291,6 @@
         },
         {
           "type": "nested_process",
-          "named": true
-        },
-        {
-          "type": "non_deterministic_choice",
           "named": true
         },
         {
@@ -1311,88 +1366,163 @@
   {
     "type": "deterministic_choice",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "binding",
-          "named": true
-        },
-        {
-          "type": "conditional",
-          "named": true
-        },
-        {
-          "type": "delete_state",
-          "named": true
-        },
-        {
-          "type": "deterministic_choice",
-          "named": true
-        },
-        {
-          "type": "event",
-          "named": true
-        },
-        {
-          "type": "inline_msr_process",
-          "named": true
-        },
-        {
-          "type": "input",
-          "named": true
-        },
-        {
-          "type": "location_process",
-          "named": true
-        },
-        {
-          "type": "nested_process",
-          "named": true
-        },
-        {
-          "type": "non_deterministic_choice",
-          "named": true
-        },
-        {
-          "type": "null",
-          "named": true
-        },
-        {
-          "type": "output",
-          "named": true
-        },
-        {
-          "type": "predefined_process",
-          "named": true
-        },
-        {
-          "type": "process_let",
-          "named": true
-        },
-        {
-          "type": "read_state",
-          "named": true
-        },
-        {
-          "type": "remove_lock",
-          "named": true
-        },
-        {
-          "type": "replication",
-          "named": true
-        },
-        {
-          "type": "set_lock",
-          "named": true
-        },
-        {
-          "type": "set_state",
-          "named": true
-        }
-      ]
+    "fields": {
+      "left": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "binding",
+            "named": true
+          },
+          {
+            "type": "conditional",
+            "named": true
+          },
+          {
+            "type": "delete_state",
+            "named": true
+          },
+          {
+            "type": "deterministic_choice",
+            "named": true
+          },
+          {
+            "type": "event",
+            "named": true
+          },
+          {
+            "type": "inline_msr_process",
+            "named": true
+          },
+          {
+            "type": "input",
+            "named": true
+          },
+          {
+            "type": "location_process",
+            "named": true
+          },
+          {
+            "type": "nested_process",
+            "named": true
+          },
+          {
+            "type": "non_deterministic_choice",
+            "named": true
+          },
+          {
+            "type": "null",
+            "named": true
+          },
+          {
+            "type": "output",
+            "named": true
+          },
+          {
+            "type": "predefined_process",
+            "named": true
+          },
+          {
+            "type": "process_let",
+            "named": true
+          },
+          {
+            "type": "read_state",
+            "named": true
+          },
+          {
+            "type": "remove_lock",
+            "named": true
+          },
+          {
+            "type": "replication",
+            "named": true
+          },
+          {
+            "type": "set_lock",
+            "named": true
+          },
+          {
+            "type": "set_state",
+            "named": true
+          }
+        ]
+      },
+      "right": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "binding",
+            "named": true
+          },
+          {
+            "type": "conditional",
+            "named": true
+          },
+          {
+            "type": "delete_state",
+            "named": true
+          },
+          {
+            "type": "event",
+            "named": true
+          },
+          {
+            "type": "inline_msr_process",
+            "named": true
+          },
+          {
+            "type": "input",
+            "named": true
+          },
+          {
+            "type": "location_process",
+            "named": true
+          },
+          {
+            "type": "nested_process",
+            "named": true
+          },
+          {
+            "type": "null",
+            "named": true
+          },
+          {
+            "type": "output",
+            "named": true
+          },
+          {
+            "type": "predefined_process",
+            "named": true
+          },
+          {
+            "type": "process_let",
+            "named": true
+          },
+          {
+            "type": "read_state",
+            "named": true
+          },
+          {
+            "type": "remove_lock",
+            "named": true
+          },
+          {
+            "type": "replication",
+            "named": true
+          },
+          {
+            "type": "set_lock",
+            "named": true
+          },
+          {
+            "type": "set_state",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -2174,10 +2304,6 @@
           "named": true
         },
         {
-          "type": "deterministic_choice",
-          "named": true
-        },
-        {
           "type": "event",
           "named": true
         },
@@ -2199,10 +2325,6 @@
         },
         {
           "type": "nested_process",
-          "named": true
-        },
-        {
-          "type": "non_deterministic_choice",
           "named": true
         },
         {
@@ -2273,6 +2395,10 @@
             "named": true
           },
           {
+            "type": "exp_term",
+            "named": true
+          },
+          {
             "type": "fresh_name",
             "named": true
           },
@@ -2286,6 +2412,10 @@
           },
           {
             "type": "nary_app",
+            "named": true
+          },
+          {
+            "type": "nat_name",
             "named": true
           },
           {
@@ -2315,7 +2445,7 @@
         ]
       },
       "exponent": {
-        "multiple": true,
+        "multiple": false,
         "required": false,
         "types": [
           {
@@ -2348,6 +2478,10 @@
           },
           {
             "type": "nary_app",
+            "named": true
+          },
+          {
+            "type": "nat_name",
             "named": true
           },
           {
@@ -2439,11 +2573,6 @@
         ]
       }
     }
-  },
-  {
-    "type": "fresh_name",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "fresh_var",
@@ -3297,10 +3426,6 @@
           "named": true
         },
         {
-          "type": "deterministic_choice",
-          "named": true
-        },
-        {
           "type": "event",
           "named": true
         },
@@ -3318,10 +3443,6 @@
         },
         {
           "type": "nested_process",
-          "named": true
-        },
-        {
-          "type": "non_deterministic_choice",
           "named": true
         },
         {
@@ -3388,10 +3509,6 @@
           "named": true
         },
         {
-          "type": "deterministic_choice",
-          "named": true
-        },
-        {
           "type": "event",
           "named": true
         },
@@ -3413,10 +3530,6 @@
         },
         {
           "type": "nested_process",
-          "named": true
-        },
-        {
-          "type": "non_deterministic_choice",
           "named": true
         },
         {
@@ -3665,12 +3778,94 @@
     "type": "let",
     "named": true,
     "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "binding",
+            "named": true
+          },
+          {
+            "type": "conditional",
+            "named": true
+          },
+          {
+            "type": "delete_state",
+            "named": true
+          },
+          {
+            "type": "deterministic_choice",
+            "named": true
+          },
+          {
+            "type": "event",
+            "named": true
+          },
+          {
+            "type": "inline_msr_process",
+            "named": true
+          },
+          {
+            "type": "input",
+            "named": true
+          },
+          {
+            "type": "location_process",
+            "named": true
+          },
+          {
+            "type": "nested_process",
+            "named": true
+          },
+          {
+            "type": "non_deterministic_choice",
+            "named": true
+          },
+          {
+            "type": "null",
+            "named": true
+          },
+          {
+            "type": "output",
+            "named": true
+          },
+          {
+            "type": "predefined_process",
+            "named": true
+          },
+          {
+            "type": "process_let",
+            "named": true
+          },
+          {
+            "type": "read_state",
+            "named": true
+          },
+          {
+            "type": "remove_lock",
+            "named": true
+          },
+          {
+            "type": "replication",
+            "named": true
+          },
+          {
+            "type": "set_lock",
+            "named": true
+          },
+          {
+            "type": "set_state",
+            "named": true
+          }
+        ]
+      },
       "let_identifier": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "mset_term",
+            "type": "ident",
             "named": true
           }
         ]
@@ -3678,82 +3873,10 @@
     },
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
-          "type": "binding",
-          "named": true
-        },
-        {
-          "type": "conditional",
-          "named": true
-        },
-        {
-          "type": "delete_state",
-          "named": true
-        },
-        {
-          "type": "deterministic_choice",
-          "named": true
-        },
-        {
-          "type": "event",
-          "named": true
-        },
-        {
-          "type": "inline_msr_process",
-          "named": true
-        },
-        {
-          "type": "input",
-          "named": true
-        },
-        {
-          "type": "location_process",
-          "named": true
-        },
-        {
-          "type": "nested_process",
-          "named": true
-        },
-        {
-          "type": "non_deterministic_choice",
-          "named": true
-        },
-        {
-          "type": "null",
-          "named": true
-        },
-        {
-          "type": "output",
-          "named": true
-        },
-        {
-          "type": "predefined_process",
-          "named": true
-        },
-        {
-          "type": "process_let",
-          "named": true
-        },
-        {
-          "type": "read_state",
-          "named": true
-        },
-        {
-          "type": "remove_lock",
-          "named": true
-        },
-        {
-          "type": "replication",
-          "named": true
-        },
-        {
-          "type": "set_lock",
-          "named": true
-        },
-        {
-          "type": "set_state",
+          "type": "arguments",
           "named": true
         }
       ]
@@ -3798,43 +3921,7 @@
         "required": true,
         "types": [
           {
-            "type": "any_var",
-            "named": true
-          },
-          {
-            "type": "comp_var",
-            "named": true
-          },
-          {
-            "type": "custom_var",
-            "named": true
-          },
-          {
-            "type": "fresh_name",
-            "named": true
-          },
-          {
-            "type": "fresh_var",
-            "named": true
-          },
-          {
-            "type": "msg_var_or_nullary_fun",
-            "named": true
-          },
-          {
-            "type": "nat_var",
-            "named": true
-          },
-          {
-            "type": "pub_name",
-            "named": true
-          },
-          {
-            "type": "pub_var",
-            "named": true
-          },
-          {
-            "type": "tuple_term",
+            "type": "mset_term",
             "named": true
           }
         ]
@@ -4046,13 +4133,17 @@
         "required": true,
         "types": [
           {
+            "type": "mset_term",
+            "named": true
+          },
+          {
             "type": "nat_term",
             "named": true
           }
         ]
       },
       "right": {
-        "multiple": true,
+        "multiple": false,
         "required": false,
         "types": [
           {
@@ -4462,88 +4553,163 @@
   {
     "type": "non_deterministic_choice",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "binding",
-          "named": true
-        },
-        {
-          "type": "conditional",
-          "named": true
-        },
-        {
-          "type": "delete_state",
-          "named": true
-        },
-        {
-          "type": "deterministic_choice",
-          "named": true
-        },
-        {
-          "type": "event",
-          "named": true
-        },
-        {
-          "type": "inline_msr_process",
-          "named": true
-        },
-        {
-          "type": "input",
-          "named": true
-        },
-        {
-          "type": "location_process",
-          "named": true
-        },
-        {
-          "type": "nested_process",
-          "named": true
-        },
-        {
-          "type": "non_deterministic_choice",
-          "named": true
-        },
-        {
-          "type": "null",
-          "named": true
-        },
-        {
-          "type": "output",
-          "named": true
-        },
-        {
-          "type": "predefined_process",
-          "named": true
-        },
-        {
-          "type": "process_let",
-          "named": true
-        },
-        {
-          "type": "read_state",
-          "named": true
-        },
-        {
-          "type": "remove_lock",
-          "named": true
-        },
-        {
-          "type": "replication",
-          "named": true
-        },
-        {
-          "type": "set_lock",
-          "named": true
-        },
-        {
-          "type": "set_state",
-          "named": true
-        }
-      ]
+    "fields": {
+      "left": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "binding",
+            "named": true
+          },
+          {
+            "type": "conditional",
+            "named": true
+          },
+          {
+            "type": "delete_state",
+            "named": true
+          },
+          {
+            "type": "deterministic_choice",
+            "named": true
+          },
+          {
+            "type": "event",
+            "named": true
+          },
+          {
+            "type": "inline_msr_process",
+            "named": true
+          },
+          {
+            "type": "input",
+            "named": true
+          },
+          {
+            "type": "location_process",
+            "named": true
+          },
+          {
+            "type": "nested_process",
+            "named": true
+          },
+          {
+            "type": "non_deterministic_choice",
+            "named": true
+          },
+          {
+            "type": "null",
+            "named": true
+          },
+          {
+            "type": "output",
+            "named": true
+          },
+          {
+            "type": "predefined_process",
+            "named": true
+          },
+          {
+            "type": "process_let",
+            "named": true
+          },
+          {
+            "type": "read_state",
+            "named": true
+          },
+          {
+            "type": "remove_lock",
+            "named": true
+          },
+          {
+            "type": "replication",
+            "named": true
+          },
+          {
+            "type": "set_lock",
+            "named": true
+          },
+          {
+            "type": "set_state",
+            "named": true
+          }
+        ]
+      },
+      "right": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "binding",
+            "named": true
+          },
+          {
+            "type": "conditional",
+            "named": true
+          },
+          {
+            "type": "delete_state",
+            "named": true
+          },
+          {
+            "type": "event",
+            "named": true
+          },
+          {
+            "type": "inline_msr_process",
+            "named": true
+          },
+          {
+            "type": "input",
+            "named": true
+          },
+          {
+            "type": "location_process",
+            "named": true
+          },
+          {
+            "type": "nested_process",
+            "named": true
+          },
+          {
+            "type": "null",
+            "named": true
+          },
+          {
+            "type": "output",
+            "named": true
+          },
+          {
+            "type": "predefined_process",
+            "named": true
+          },
+          {
+            "type": "process_let",
+            "named": true
+          },
+          {
+            "type": "read_state",
+            "named": true
+          },
+          {
+            "type": "remove_lock",
+            "named": true
+          },
+          {
+            "type": "replication",
+            "named": true
+          },
+          {
+            "type": "set_lock",
+            "named": true
+          },
+          {
+            "type": "set_state",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -4672,10 +4838,6 @@
           "named": true
         },
         {
-          "type": "deterministic_choice",
-          "named": true
-        },
-        {
           "type": "event",
           "named": true
         },
@@ -4697,10 +4859,6 @@
         },
         {
           "type": "nested_process",
-          "named": true
-        },
-        {
-          "type": "non_deterministic_choice",
           "named": true
         },
         {
@@ -4795,13 +4953,24 @@
   {
     "type": "predefined_process",
     "named": true,
-    "fields": {},
+    "fields": {
+      "process_identifier": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "ident",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
-          "type": "mset_term",
+          "type": "arguments",
           "named": true
         }
       ]
@@ -5346,11 +5515,6 @@
     }
   },
   {
-    "type": "pub_name",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "pub_var",
     "named": true,
     "fields": {
@@ -5686,88 +5850,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "binding",
-          "named": true
-        },
-        {
-          "type": "conditional",
-          "named": true
-        },
-        {
-          "type": "delete_state",
-          "named": true
-        },
-        {
-          "type": "deterministic_choice",
-          "named": true
-        },
-        {
-          "type": "event",
-          "named": true
-        },
-        {
-          "type": "inline_msr_process",
-          "named": true
-        },
-        {
-          "type": "input",
-          "named": true
-        },
-        {
-          "type": "location_process",
-          "named": true
-        },
-        {
-          "type": "nested_process",
-          "named": true
-        },
-        {
-          "type": "non_deterministic_choice",
-          "named": true
-        },
-        {
-          "type": "null",
-          "named": true
-        },
-        {
-          "type": "output",
-          "named": true
-        },
-        {
-          "type": "predefined_process",
-          "named": true
-        },
-        {
-          "type": "process_let",
-          "named": true
-        },
-        {
-          "type": "read_state",
-          "named": true
-        },
-        {
-          "type": "remove_lock",
-          "named": true
-        },
-        {
-          "type": "replication",
-          "named": true
-        },
-        {
-          "type": "set_lock",
-          "named": true
-        },
-        {
-          "type": "set_state",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -5788,10 +5870,6 @@
         },
         {
           "type": "delete_state",
-          "named": true
-        },
-        {
-          "type": "deterministic_choice",
           "named": true
         },
         {
@@ -5816,10 +5894,6 @@
         },
         {
           "type": "nested_process",
-          "named": true
-        },
-        {
-          "type": "non_deterministic_choice",
           "named": true
         },
         {
@@ -5864,88 +5938,89 @@
   {
     "type": "replication",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "binding",
-          "named": true
-        },
-        {
-          "type": "conditional",
-          "named": true
-        },
-        {
-          "type": "delete_state",
-          "named": true
-        },
-        {
-          "type": "deterministic_choice",
-          "named": true
-        },
-        {
-          "type": "event",
-          "named": true
-        },
-        {
-          "type": "inline_msr_process",
-          "named": true
-        },
-        {
-          "type": "input",
-          "named": true
-        },
-        {
-          "type": "location_process",
-          "named": true
-        },
-        {
-          "type": "nested_process",
-          "named": true
-        },
-        {
-          "type": "non_deterministic_choice",
-          "named": true
-        },
-        {
-          "type": "null",
-          "named": true
-        },
-        {
-          "type": "output",
-          "named": true
-        },
-        {
-          "type": "predefined_process",
-          "named": true
-        },
-        {
-          "type": "process_let",
-          "named": true
-        },
-        {
-          "type": "read_state",
-          "named": true
-        },
-        {
-          "type": "remove_lock",
-          "named": true
-        },
-        {
-          "type": "replication",
-          "named": true
-        },
-        {
-          "type": "set_lock",
-          "named": true
-        },
-        {
-          "type": "set_state",
-          "named": true
-        }
-      ]
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "binding",
+            "named": true
+          },
+          {
+            "type": "conditional",
+            "named": true
+          },
+          {
+            "type": "delete_state",
+            "named": true
+          },
+          {
+            "type": "deterministic_choice",
+            "named": true
+          },
+          {
+            "type": "event",
+            "named": true
+          },
+          {
+            "type": "inline_msr_process",
+            "named": true
+          },
+          {
+            "type": "input",
+            "named": true
+          },
+          {
+            "type": "location_process",
+            "named": true
+          },
+          {
+            "type": "nested_process",
+            "named": true
+          },
+          {
+            "type": "non_deterministic_choice",
+            "named": true
+          },
+          {
+            "type": "null",
+            "named": true
+          },
+          {
+            "type": "output",
+            "named": true
+          },
+          {
+            "type": "predefined_process",
+            "named": true
+          },
+          {
+            "type": "process_let",
+            "named": true
+          },
+          {
+            "type": "read_state",
+            "named": true
+          },
+          {
+            "type": "remove_lock",
+            "named": true
+          },
+          {
+            "type": "replication",
+            "named": true
+          },
+          {
+            "type": "set_lock",
+            "named": true
+          },
+          {
+            "type": "set_state",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -6272,10 +6347,6 @@
           "named": true
         },
         {
-          "type": "deterministic_choice",
-          "named": true
-        },
-        {
           "type": "event",
           "named": true
         },
@@ -6297,10 +6368,6 @@
         },
         {
           "type": "nested_process",
-          "named": true
-        },
-        {
-          "type": "non_deterministic_choice",
           "named": true
         },
         {
@@ -6384,10 +6451,6 @@
           "named": true
         },
         {
-          "type": "deterministic_choice",
-          "named": true
-        },
-        {
           "type": "event",
           "named": true
         },
@@ -6405,10 +6468,6 @@
         },
         {
           "type": "nested_process",
-          "named": true
-        },
-        {
-          "type": "non_deterministic_choice",
           "named": true
         },
         {
@@ -6997,14 +7056,6 @@
     "named": false
   },
   {
-    "type": "--auto-sources",
-    "named": false
-  },
-  {
-    "type": "--stop-on-trace",
-    "named": false
-  },
-  {
     "type": ".",
     "named": false
   },
@@ -7065,14 +7116,6 @@
     "named": false
   },
   {
-    "type": "BFS",
-    "named": false
-  },
-  {
-    "type": "DFS",
-    "named": false
-  },
-  {
     "type": "E",
     "named": false
   },
@@ -7082,6 +7125,10 @@
   },
   {
     "type": "F",
+    "named": false
+  },
+  {
+    "type": "INVALIDATED",
     "named": false
   },
   {
@@ -7097,11 +7144,15 @@
     "named": false
   },
   {
-    "type": "SEQDFS",
+    "type": "T",
     "named": false
   },
   {
-    "type": "T",
+    "type": "UNFINISHABLE",
+    "named": false
+  },
+  {
+    "type": "UNFINISHABLEdiff",
     "named": false
   },
   {
@@ -7161,10 +7212,6 @@
     "named": false
   },
   {
-    "type": "bfs",
-    "named": false
-  },
-  {
     "type": "bilinear-pairing",
     "named": false
   },
@@ -7189,7 +7236,15 @@
     "named": false
   },
   {
+    "type": "commandline",
+    "named": true
+  },
+  {
     "type": "configuration",
+    "named": false
+  },
+  {
+    "type": "constructor",
     "named": false
   },
   {
@@ -7237,10 +7292,6 @@
     "named": false
   },
   {
-    "type": "dfs",
-    "named": false
-  },
-  {
     "type": "dhreNoise",
     "named": false
   },
@@ -7250,6 +7301,10 @@
   },
   {
     "type": "diffLemma",
+    "named": false
+  },
+  {
+    "type": "diff_reuse",
     "named": false
   },
   {
@@ -7297,6 +7352,14 @@
     "named": false
   },
   {
+    "type": "fresh_name",
+    "named": true
+  },
+  {
+    "type": "function",
+    "named": false
+  },
+  {
     "type": "functions",
     "named": false
   },
@@ -7309,11 +7372,7 @@
     "named": false
   },
   {
-    "type": "heuristic=",
-    "named": false
-  },
-  {
-    "type": "hide_lemma=",
+    "type": "hide_lemma",
     "named": false
   },
   {
@@ -7414,6 +7473,10 @@
     "named": false
   },
   {
+    "type": "nat_name",
+    "named": true
+  },
+  {
     "type": "natural",
     "named": true
   },
@@ -7490,7 +7553,7 @@
     "named": false
   },
   {
-    "type": "output=",
+    "type": "output",
     "named": false
   },
   {
@@ -7534,6 +7597,10 @@
     "named": false
   },
   {
+    "type": "pub_name",
+    "named": true
+  },
+  {
     "type": "qed",
     "named": false
   },
@@ -7575,10 +7642,6 @@
   },
   {
     "type": "rule-equivalence",
-    "named": false
-  },
-  {
-    "type": "seqdfs",
     "named": false
   },
   {
@@ -7643,10 +7706,6 @@
     "named": false
   },
   {
-    "type": "temporal",
-    "named": false
-  },
-  {
     "type": "test",
     "named": false
   },
@@ -7676,6 +7735,10 @@
   },
   {
     "type": "translation-state-optimisation",
+    "named": false
+  },
+  {
+    "type": "typing",
     "named": false
   },
   {
@@ -7716,10 +7779,6 @@
   },
   {
     "type": "~",
-    "named": false
-  },
-  {
-    "type": "~'",
     "named": false
   },
   {

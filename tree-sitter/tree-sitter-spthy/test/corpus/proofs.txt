@@ -1,0 +1,437 @@
+==================
+Proof completion states and empty cases
+==================
+
+theory Proofs
+begin
+lemma invalid: "T" by INVALIDATED
+lemma unfinished: "T" by UNFINISHABLE
+lemma empty: "T" simplify qed
+diffLemma unfinished_diff: by UNFINISHABLEdiff
+end
+
+---
+
+(theory
+  (ident)
+  (lemma
+    (ident)
+    (atom)
+    (by_method
+      (proof_method)))
+  (lemma
+    (ident)
+    (atom)
+    (by_method
+      (proof_method)))
+  (lemma
+    (ident)
+    (atom)
+    (method_skeleton
+      (proof_method)
+      (cases)))
+  (diff_lemma
+    (ident)
+    (by_method
+      (proof_method))))
+
+==================
+Proof goals and case splits
+==================
+
+theory Goals
+begin
+lemma subterm: "T" solve(x << y) by sorry
+lemma premise: "T" solve(F(x) ▶₁ #i) by sorry
+lemma chain: "T" solve((#i,0) ~~> (#j,1)) by sorry
+lemma split: "T" solve(splitEqs(1)) case one by sorry next case two by sorry qed
+lemma disjunction: "T" solve(T ∥ F) by sorry
+diffLemma steps: step(simplify) MIRRORED
+end
+
+---
+
+(theory
+  (ident)
+  (lemma
+    (ident)
+    (atom)
+    (method_skeleton
+      (proof_method
+        (constraint
+          (subterm_rel
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (msg_var_or_nullary_fun
+                        (ident)))))))
+            (mset_term
+              (nat_term
+                (xor_term
+                  (mul_term
+                    (exp_term
+                      (msg_var_or_nullary_fun
+                        (ident))))))))))
+      (by_method
+        (proof_method))))
+  (lemma
+    (ident)
+    (atom)
+    (method_skeleton
+      (proof_method
+        (constraint
+          (premise_constraint
+            (linear_fact
+              (ident)
+              (arguments
+                (mset_term
+                  (nat_term
+                    (xor_term
+                      (mul_term
+                        (exp_term
+                          (msg_var_or_nullary_fun
+                            (ident)))))))))
+            (natural_subscript)
+            (temporal_var
+              (ident)))))
+      (by_method
+        (proof_method))))
+  (lemma
+    (ident)
+    (atom)
+    (method_skeleton
+      (proof_method
+        (constraint
+          (chain_constraint
+            (temporal_var
+              (ident))
+            (natural)
+            (temporal_var
+              (ident))
+            (natural))))
+      (by_method
+        (proof_method))))
+  (lemma
+    (ident)
+    (atom)
+    (method_skeleton
+      (proof_method
+        (constraint
+          (eq_split_constraint
+            (natural))))
+      (cases
+        (case
+          (ident)
+          (by_method
+            (proof_method)))
+        (case
+          (ident)
+          (by_method
+            (proof_method))))))
+  (lemma
+    (ident)
+    (atom)
+    (method_skeleton
+      (proof_method
+        (constraint
+          (disjunction_split_constraint
+            (atom)
+            (atom))))
+      (by_method
+        (proof_method))))
+  (diff_lemma
+    (ident)
+    (method_skeleton
+      (step
+        (proof_method))
+      (mirrored))))
+
+==================
+Lemma attributes allow spaces around equals
+==================
+
+theory Attributes
+begin
+lemma example [typing, diff_reuse, hide_lemma = other, heuristic = s, output = [spthy,proverif]]: "T"
+end
+
+---
+
+(theory
+  (ident)
+  (lemma
+    (ident)
+    (diff_lemma_attrs
+      (lemma_attr)
+      (lemma_attr)
+      (lemma_attr
+        (ident))
+      (lemma_attr
+        (standard_proof_method_ranking))
+      (lemma_attr
+        (language)
+        (language)))
+    (atom)))
+
+==================
+Node sorted arguments and explicit node suffixes
+==================
+
+theory Nodes
+begin
+predicates: Before(#i,#j) <=> #i < #j
+lemma example: "All #i #j. Before(#i,#j) ==> Seen()@i:node & i:node < j:node"
+lemma messages: "x = y"
+lemma nodes: "x:node = y:node"
+lemma mixed_left: "#x = y"
+lemma mixed_right: "x = #y"
+end
+
+---
+
+(theory
+  (ident)
+  (predicates
+    (predicate
+      (ident)
+      (arguments
+        (temporal_var
+          (ident))
+        (temporal_var
+          (ident)))
+      (temp_var_order
+        (temporal_var
+          (ident))
+        (temporal_var
+          (ident)))))
+  (lemma
+    (ident)
+    (quantified_formula
+      (temporal_var
+        (ident))
+      (temporal_var
+        (ident))
+      (imp
+        (predicate_ref
+          (ident)
+          (arguments
+            (temporal_var
+              (ident))
+            (temporal_var
+              (ident))))
+        (conjunction
+          (action_constraint
+            (linear_fact
+              (ident))
+            (temporal_var
+              (ident)))
+          (temp_var_order
+            (temporal_var
+              (ident))
+            (temporal_var
+              (ident)))))))
+  (lemma
+    (ident)
+    (term_eq
+      (mset_term
+        (nat_term
+          (xor_term
+            (mul_term
+              (exp_term
+                (msg_var_or_nullary_fun
+                  (ident)))))))
+      (mset_term
+        (nat_term
+          (xor_term
+            (mul_term
+              (exp_term
+                (msg_var_or_nullary_fun
+                  (ident)))))))))
+  (lemma
+    (ident)
+    (temp_var_eq
+      (temporal_var
+        (ident))
+      (temporal_var
+        (ident))))
+  (lemma
+    (ident)
+    (temp_var_eq
+      (temporal_var
+        (ident))
+      (temporal_var
+        (ident))))
+  (lemma
+    (ident)
+    (temp_var_eq
+      (temporal_var
+        (ident))
+      (temporal_var
+        (ident)))))
+
+==================
+Tactics with defaults and Unicode boolean operators
+==================
+
+theory Tactics
+begin
+tactic: defaults
+tactic: custom
+presort: s
+prio: {smallest} isFactName "Start" ∧ ¬ regex "noise" ∨ regex "important"
+deprio: regex "skip"
+heuristic: {custom} o "../oracles/my oracle.py"
+end
+
+---
+
+(theory
+  (ident)
+  (tactic
+    (ident))
+  (tactic
+    (ident)
+    (presort
+      (standard_proof_method_ranking))
+    (prio
+      (post_ranking)
+      (or_function
+        (and_function
+          (std_function
+            (function_name)
+            (param))
+          (not_function
+            (std_function
+              (function_name)
+              (param))))
+        (std_function
+          (function_name)
+          (param))))
+    (deprio
+      (std_function
+        (function_name)
+        (param))))
+  (global_heuristic
+    (tactic_proof_method_ranking
+      (ident))
+    (oracle_proof_method_ranking
+      (param))))
+
+==================
+Nested preprocessor conditions
+==================
+
+theory Preprocessor
+begin
+#define ENABLED
+#ifdef ENABLED & (OTHER | not DISABLED)
+#ifdef INNER
+rule A: [] --> []
+#endif
+#else
+rule B: [] --> []
+#endif
+end
+
+---
+
+(theory
+  (ident)
+  (preprocessor
+    (define
+      (ident)))
+  (preprocessor
+    (ifdef
+      (ifdef_and
+        (ident)
+        (ifdef_nested
+          (ifdef_or
+            (ident)
+            (ifdef_not
+              (ident)))))
+      (preprocessor
+        (ifdef
+          (ident)
+          (rule
+            (simple_rule
+              (ident)
+              (premise)
+              (conclusion)))))
+      (rule
+        (simple_rule
+          (ident)
+          (premise)
+          (conclusion))))))
+
+==================
+Rule variants and differential rules
+==================
+
+theory Rules
+begin
+rule R: [] --> []
+variants rule (modulo AC) R1: [] --> [], rule (modulo AC) R2: [] --> []
+rule D: [] --> []
+left rule DL: [] --> []
+right rule DR: [] --> []
+end
+
+---
+
+(theory
+  (ident)
+  (rule
+    (simple_rule
+      (ident)
+      (premise)
+      (conclusion))
+    (variants
+      (simple_rule
+        (modulo)
+        (ident)
+        (premise)
+        (conclusion))
+      (simple_rule
+        (modulo)
+        (ident)
+        (premise)
+        (conclusion))))
+  (diff_rule
+    (simple_rule
+      (ident)
+      (premise)
+      (conclusion))
+    (rule
+      (simple_rule
+        (ident)
+        (premise)
+        (conclusion)))
+    (rule
+      (simple_rule
+        (ident)
+        (premise)
+        (conclusion)))))
+
+==================
+Opaque export text including escapes and comments
+==================
+
+theory Exports
+begin
+export queries: " // literal comment
+ query attacker(\"secret\"); \\ path "
+export empty: ""
+end
+
+---
+
+(theory
+  (ident)
+  (export
+    (ident)
+    (export_query))
+  (export
+    (ident)
+    (export_query)))
