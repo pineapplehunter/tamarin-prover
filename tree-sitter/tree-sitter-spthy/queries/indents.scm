@@ -1,0 +1,25 @@
+[
+  (theory)
+  (ifdef)
+  (simple_rule)
+  (lemma)
+  (diff_lemma)
+  (restriction)
+  (let)
+  (process)
+  (nested_process)
+  (location_process)
+  (conditional)
+  (process_let)
+  (read_state)
+  (cases)
+  (premise)
+  (action_fact)
+  (conclusion)
+  (arguments)
+  (tuple_term)
+  (nested_term)
+  (nested_formula)
+] @indent
+
+["end" "#else" "#endif" "else" "in" "qed" ")" "]" "}" "]->" ">"] @outdent

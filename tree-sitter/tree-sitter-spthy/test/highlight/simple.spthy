@@ -1,6 +1,6 @@
 theory simple
 // <- keyword
-//      ^ module
+//      ^ namespace
 begin
 
 rule Rule1:
@@ -12,7 +12,7 @@ lemma Lemma1:
 // <- keyword
 //     ^ function
 	exists-trace
-	// ^ property
+	// ^ keyword
 	"T"
 
 end

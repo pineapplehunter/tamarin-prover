@@ -1,0 +1,43 @@
+theory Features
+//     ^ namespace
+configuration: "--bound=10"
+//              ^ string
+begin
+
+functions: user/1 [constructor]
+//         ^ function
+//                 ^ attribute
+
+#include "../shared/protocol.splib"
+// <- keyword.directive
+//        ^ string
+
+let Worker(k:key) =
+//  ^ function
+//           ^ type
+  in(<x,=k>); out(user(x))
+//^ keyword
+//                ^ function
+
+process:
+// <- keyword
+  new k; lookup k as v in Worker(v) else 0
+//^ keyword
+//       ^ keyword.control.conditional
+//                        ^ function
+
+rule Send: [] --[Seen('a')]-> [Out('a')]
+//   ^ function
+//               ^ function
+//                    ^ string
+
+lemma trace [reuse]: "All x #i. Seen(x)@i ==> x = 'a'"
+//    ^ function
+//           ^ attribute
+//                    ^ keyword
+//                        ^ variable
+//                                        ^ operator
+by sorry
+// ^ keyword
+
+end
